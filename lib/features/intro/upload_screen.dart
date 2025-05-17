@@ -7,6 +7,7 @@ import 'package:taskati/core/constants/app_images.dart';
 import 'package:taskati/core/functions/navigator.dart';
 import 'package:taskati/core/utils/app_colors.dart';
 import 'package:taskati/core/utils/text_styles.dart';
+import 'package:taskati/core/widgets/dialog.dart';
 import 'package:taskati/core/widgets/main_button.dart';
 import 'package:taskati/features/intro/home_page.dart';
 
@@ -28,17 +29,18 @@ class _UploadScreenState extends State<UploadScreen> {
           TextButton(
             child: Text(
               'Done',
-              style: AppTextStyes.subtitle(color: Colors.deepPurple),
+              style: AppTextStyles.subtitle(color: Colors.deepPurple),
             ),
             onPressed: () {
               // Handle done action
-              if(pathImage != null && nameController.text.isNotEmpty) {
+              if (pathImage != null && nameController.text.isNotEmpty) {
                 // Navigate to the next screen
                 context.pushReplacement(const HomePage());
               } else {
                 // Show error message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Please select an image and enter your name')),
+                showErrorSnackBar(
+                  context,
+                  'Please select an image and enter your name',
                 );
               }
             },
@@ -120,7 +122,7 @@ class _UploadScreenState extends State<UploadScreen> {
             children: [
               Text(
                 'Upload Image',
-                style: AppTextStyes.title(fontWeight: FontWeight.w400),
+                style: AppTextStyles.title(fontWeight: FontWeight.w400),
               ),
               MainButton(title: 'Take a Photo', onPressed: onPressedCamera),
               MainButton(
@@ -148,7 +150,7 @@ class _UploadScreenState extends State<UploadScreen> {
     });
   }
 
-  onPressedGallery() async{
+  onPressedGallery() async {
     ImagePicker imagePicker = ImagePicker();
     await imagePicker.pickImage(source: ImageSource.gallery).then((value) {
       if (value != null) {

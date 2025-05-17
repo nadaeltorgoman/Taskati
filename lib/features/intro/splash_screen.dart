@@ -15,9 +15,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  
   @override
-  void initState()  {
+  void initState() {
     Future.delayed(const Duration(seconds: 5), () {
       context.pushReplacement(const UploadScreen());
     });
@@ -36,10 +35,13 @@ class _SplashScreenState extends State<SplashScreen> {
             const SizedBox(height: 20),
             Text(
               'Taskati',
-              style: AppTextStyes.title(fontWeight: FontWeight.w500),
+              style: AppTextStyles.title(fontWeight: FontWeight.w500),
             ),
             Gap(15),
-            Text('It\'s time to get organized', style: AppTextStyes.subtitle()),
+            Text(
+              'It\'s time to get organized',
+              style: AppTextStyles.subtitle(),
+            ),
           ],
         ),
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:taskati/core/utils/app_colors.dart';
 
-class AppTextStyes {
+class AppTextStyles {
   static TextStyle title({
     double fontSize = 24,
     FontWeight fontWeight = FontWeight.bold,

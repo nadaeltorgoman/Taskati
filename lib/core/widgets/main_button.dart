@@ -19,7 +19,7 @@ class MainButton extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: AppTextStyes.subtitle(color: AppColors.white),
+          style: AppTextStyles.subtitle(color: AppColors.white),
         ),
       ),
     );
