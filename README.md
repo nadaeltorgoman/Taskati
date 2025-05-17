@@ -1,10 +1,9 @@
 # 📱 Taskati App
 
 <h1 align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=500&color=FF4B4B&center=true&vCenter=true&multiline=true&width=600&lines=🧠+Organize+your+plans;🌅+Organize+your+day" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=500&color=F75C7E&center=true&vCenter=true&multiline=true&width=435&height=100&size=24&lines=🧠+Organize+your+plans;🌅+Organize+your+day" alt="Typing SVG" />
+  
 </h1>
-
----
 
 ## 🚀 About
 
@@ -23,10 +22,10 @@ Whether you're organizing your work, personal life, or daily reminders – Taska
 
 ---
 
-## 🛠 Tech Stack
+<!---## 🛠 Tech Stack
 
 - Flutter + Dart
 - Hive for local storage
 - Bloc for state management
 
----
+--->
