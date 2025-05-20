@@ -22,10 +22,8 @@ Whether you're organizing your work, personal life, or daily reminders – Taska
 
 ---
 
-<!---## 🛠 Tech Stack
+## 🛠 Tech Stack
 
 - Flutter + Dart
 - Hive for local storage
-- Bloc for state management
-
---->
+<!---- Bloc for state management-->
