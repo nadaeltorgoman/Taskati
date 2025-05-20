@@ -5,11 +5,12 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:taskati/core/constants/app_images.dart';
 import 'package:taskati/core/functions/navigator.dart';
+import 'package:taskati/core/services/local_storage.dart';
 import 'package:taskati/core/utils/app_colors.dart';
 import 'package:taskati/core/utils/text_styles.dart';
 import 'package:taskati/core/widgets/dialog.dart';
 import 'package:taskati/core/widgets/main_button.dart';
-import 'package:taskati/features/intro/home_page.dart';
+import 'package:taskati/features/Home/pages/home_page.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -23,6 +24,8 @@ class _UploadScreenState extends State<UploadScreen> {
   TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    // // Get the user box from Hive
+    // var userBox = Hive.box('user');
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -32,12 +35,21 @@ class _UploadScreenState extends State<UploadScreen> {
               style: AppTextStyles.subtitle(color: Colors.deepPurple),
             ),
             onPressed: () {
-              // Handle done action
               if (pathImage != null && nameController.text.isNotEmpty) {
-                // Navigate to the next screen
+                LocalStorage.saveData(LocalStorage.name, nameController.text);
+                LocalStorage.saveData(LocalStorage.imagePath, pathImage!);
                 context.pushReplacement(const HomePage());
+
+                showErrorSnackBar(
+                  context,
+                  'Profile updated successfully',
+                  type: DialogType.success,
+                );
+              } else if (pathImage == null && nameController.text.isNotEmpty) {
+                showErrorSnackBar(context, 'Please select an image');
+              } else if (pathImage != null && nameController.text.isEmpty) {
+                showErrorSnackBar(context, 'Please enter your name');
               } else {
-                // Show error message
                 showErrorSnackBar(
                   context,
                   'Please select an image and enter your name',
@@ -125,6 +137,7 @@ class _UploadScreenState extends State<UploadScreen> {
                 style: AppTextStyles.title(fontWeight: FontWeight.w400),
               ),
               MainButton(title: 'Take a Photo', onPressed: onPressedCamera),
+              const Gap(5),
               MainButton(
                 title: 'Choose from Gallery',
                 onPressed: onPressedGallery,

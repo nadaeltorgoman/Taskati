@@ -3,9 +3,11 @@ import 'package:gap/gap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:taskati/core/constants/app_images.dart';
 import 'package:taskati/core/functions/navigator.dart';
+import 'package:taskati/core/services/local_storage.dart';
 import 'package:taskati/core/utils/app_colors.dart';
 import 'package:taskati/core/utils/text_styles.dart';
-import 'package:taskati/features/intro/upload_screen.dart';
+import 'package:taskati/features/Home/pages/home_page.dart';
+import 'package:taskati/features/intro/pages/upload_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,8 +19,13 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    String? isFirstTime = LocalStorage.getData(LocalStorage.name);
     Future.delayed(const Duration(seconds: 5), () {
-      context.pushReplacement(const UploadScreen());
+      if (isFirstTime != null) {
+        context.pushReplacement(const HomePage());
+      } else {
+        context.pushReplacement(const UploadScreen());
+      }
     });
     super.initState();
   }
