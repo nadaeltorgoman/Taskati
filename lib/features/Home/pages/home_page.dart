@@ -1,7 +1,6 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:taskati/core/functions/navigator.dart';
 import 'package:taskati/core/utils/app_colors.dart';
 import 'package:taskati/features/Home/widgets/home_header.dart';
 import 'package:taskati/features/Home/widgets/list_of_tasks.dart';
@@ -31,9 +30,7 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(builder: (context) => EditProfile()),
                   );
                   if (result == true) {
-                    setState(() {
-                      // إعادة بناء الواجهة لتحديث البيانات
-                    });
+                    setState(() {});
                   }
                 },
                 child: HomeHeader(),
