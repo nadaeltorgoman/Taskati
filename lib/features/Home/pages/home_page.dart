@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(builder: (context) => EditProfile()),
                   );
                   if (result == true) {
-                    setState(() {});
+                    setState((){});
                   }
                 },
                 child: HomeHeader(),
