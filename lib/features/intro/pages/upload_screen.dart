@@ -24,15 +24,13 @@ class _UploadScreenState extends State<UploadScreen> {
   TextEditingController nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    // // Get the user box from Hive
-    // var userBox = Hive.box('user');
     return Scaffold(
       appBar: AppBar(
         actions: [
           TextButton(
             child: Text(
               'Done',
-              style: AppTextStyles.subtitle(color: Colors.deepPurple),
+              style: AppTextStyles.subtitle(context),
             ),
             onPressed: () {
               if (pathImage != null && nameController.text.isNotEmpty) {
@@ -40,17 +38,17 @@ class _UploadScreenState extends State<UploadScreen> {
                 LocalStorage.saveData(LocalStorage.imagePath, pathImage!);
                 context.pushReplacement(const HomePage());
 
-                showErrorSnackBar(
+                showSnackBar(
                   context,
                   'Profile updated successfully',
                   type: DialogType.success,
                 );
               } else if (pathImage == null && nameController.text.isNotEmpty) {
-                showErrorSnackBar(context, 'Please select an image');
+                showSnackBar(context, 'Please select an image');
               } else if (pathImage != null && nameController.text.isEmpty) {
-                showErrorSnackBar(context, 'Please enter your name');
+                showSnackBar(context, 'Please enter your name');
               } else {
-                showErrorSnackBar(
+                showSnackBar(
                   context,
                   'Please select an image and enter your name',
                 );
@@ -96,7 +94,7 @@ class _UploadScreenState extends State<UploadScreen> {
                         padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColors.white,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                         child: Icon(
                           Icons.camera_alt,
@@ -125,6 +123,7 @@ class _UploadScreenState extends State<UploadScreen> {
   showUpBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: AppColors.white,
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(20),
@@ -134,7 +133,7 @@ class _UploadScreenState extends State<UploadScreen> {
             children: [
               Text(
                 'Upload Image',
-                style: AppTextStyles.title(fontWeight: FontWeight.w400),
+                style: AppTextStyles.title(context, fontWeight: FontWeight.w400),
               ),
               MainButton(title: 'Take a Photo', onPressed: onPressedCamera),
               const Gap(5),

@@ -33,7 +33,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,12 +41,12 @@ class _SplashScreenState extends State<SplashScreen> {
             const SizedBox(height: 20),
             Text(
               'Taskati',
-              style: AppTextStyles.title(fontWeight: FontWeight.w500),
+              style: AppTextStyles.title(context, fontWeight: FontWeight.w500),
             ),
             Gap(15),
             Text(
               'It\'s time to get organized',
-              style: AppTextStyles.subtitle(),
+              style: AppTextStyles.subtitle(context),
             ),
           ],
         ),

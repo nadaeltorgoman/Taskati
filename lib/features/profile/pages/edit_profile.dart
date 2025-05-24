@@ -37,7 +37,8 @@ class _EditProfileState extends State<EditProfile> {
           IconButton(
             icon: const Icon(Icons.light_mode),
             onPressed: () {
-              // Handle the done action
+              // Handle the theme change
+
             },
           ),
         ],
@@ -93,7 +94,7 @@ class _EditProfileState extends State<EditProfile> {
                         padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColors.white,
+                          color: Theme.of(context).colorScheme.surface,
                         ),
                         child: Icon(
                           Icons.camera_alt,
@@ -113,8 +114,8 @@ class _EditProfileState extends State<EditProfile> {
                   Text(
                     LocalStorage.getData(LocalStorage.name) ?? 'User Name',
                     style: AppTextStyles.subtitle(
+                      context,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.primaryColor,
                     ),
                   ),
                   const Spacer(),
@@ -122,13 +123,16 @@ class _EditProfileState extends State<EditProfile> {
                     backgroundColor: AppColors.primaryColor,
                     radius: 22,
                     child: CircleAvatar(
-                      backgroundColor: AppColors.white,
+                      backgroundColor: Theme.of(context).colorScheme.surface,
                       radius: 20,
 
                       child: IconButton(
-                        icon: const Icon(Icons.edit),
+                        icon: Icon(
+                          Icons.edit,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                         onPressed: () {
-                          ShowUpBottomSheetEditText(context);
+                          showUpBottomSheetEditText(context);
                         },
                       ),
                     ),
@@ -145,6 +149,7 @@ class _EditProfileState extends State<EditProfile> {
   showUpBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(20),
@@ -154,7 +159,10 @@ class _EditProfileState extends State<EditProfile> {
             children: [
               Text(
                 'Upload Image',
-                style: AppTextStyles.title(fontWeight: FontWeight.w400),
+                style: AppTextStyles.title(
+                  context,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               MainButton(
                 title: 'Upload from Camera',
@@ -201,9 +209,10 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
-  ShowUpBottomSheetEditText(BuildContext context) {
+  showUpBottomSheetEditText(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(20),
@@ -213,7 +222,10 @@ class _EditProfileState extends State<EditProfile> {
             children: [
               Text(
                 'Edit Name',
-                style: AppTextStyles.title(fontWeight: FontWeight.w400),
+                style: AppTextStyles.title(
+                  context,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               TextFormField(
                 controller: nameController,

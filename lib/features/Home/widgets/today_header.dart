@@ -7,7 +7,8 @@ import 'package:taskati/core/widgets/main_button.dart';
 import 'package:taskati/features/addTask/pages/add_task.dart';
 
 class TodayHeader extends StatelessWidget {
-  const TodayHeader({super.key});
+  final String selectedDate;
+  const TodayHeader({super.key, required this.selectedDate});
 
   @override
   Widget build(BuildContext context) {
@@ -20,27 +21,29 @@ class TodayHeader extends StatelessWidget {
             Text(
               DateFormat.yMMMd().format(DateTime.now()),
               style: AppTextStyles.subtitle(
+                context,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black,
                 fontSize: 20,
               ),
             ),
             Text(
               'Today',
               style: AppTextStyles.subtitle(
+                context,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black,
                 fontSize: 20,
               ),
             ),
           ],
         ),
-        MainButton(
-          title: '+ Add Task',
-          onPressed: () {
-            context.push(AddTask());
-          },
-          width: 150,
+        const SizedBox(width: 10),
+        Expanded(
+          child: MainButton(
+            title: '+ Add Task',
+            onPressed: () {
+              context.push(AddTask(selectedDate: selectedDate));
+            },
+          ),
         ),
       ],
     );

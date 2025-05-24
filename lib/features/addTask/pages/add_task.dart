@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:taskati/core/functions/navigator.dart';
+import 'package:taskati/core/model/task_model.dart';
+import 'package:taskati/core/services/local_storage.dart';
 import 'package:taskati/core/utils/app_colors.dart';
 import 'package:taskati/core/utils/text_styles.dart';
 import 'package:taskati/core/widgets/main_button.dart';
+import 'package:taskati/features/Home/pages/home_page.dart';
 
 class AddTask extends StatefulWidget {
-  const AddTask({super.key});
+  final String selectedDate;
+  const AddTask({super.key, required this.selectedDate});
 
   @override
   State<AddTask> createState() => _AddTaskState();
@@ -19,14 +24,15 @@ class _AddTaskState extends State<AddTask> {
   var startTimeController = TextEditingController();
   var endTimeController = TextEditingController();
   int selectedColor = 0;
+  var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    dateController.text = widget.selectedDate;
     startTimeController.text = DateFormat('hh:mm a').format(DateTime.now());
     endTimeController.text = DateFormat(
       'hh:mm a',
-    ).format(DateTime.now().add(const Duration(hours: 1)));
+    ).format(DateFormat('hh:mm a').parse(startTimeController.text).add(const Duration(hours: 1)));
     super.initState();
   }
 
@@ -46,25 +52,52 @@ class _AddTaskState extends State<AddTask> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              title(),
-              const Gap(10),
-              description(),
-              const Gap(10),
-              date(),
-              const Gap(10),
-              Row(children: [startTime(), const Gap(10), endTime()]),
-              const Gap(10),
-              color(),
-            ],
+          child: Form(
+            key: formKey,
+            // autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                title(),
+                const Gap(10),
+                description(),
+                const Gap(10),
+                date(),
+                const Gap(10),
+                Row(children: [startTime(), const Gap(10), endTime()]),
+                const Gap(10),
+                color(),
+              ],
+            ),
           ),
         ),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: MainButton(title: 'Create Task', onPressed: () {}, width: 160),
+        child: MainButton(
+          title: 'Create Task',
+          onPressed: () {
+            if (formKey.currentState?.validate() == true) {
+              String taskId =
+                  titleController.text + DateTime.now().microsecond.toString();
+              LocalStorage.saveTask(
+                taskId,
+                TaskModel(
+                  id: taskId,
+                  title: titleController.text,
+                  description: descriptionController.text,
+                  date: dateController.text,
+                  startDate: startTimeController.text,
+                  endDate: endTimeController.text,
+                  isCompleted: false,
+                  color: selectedColor,
+                ),
+              );
+              context.pushReplacement(const HomePage());
+            }
+          },
+          width: 160,
+        ),
       ),
     );
   }
@@ -76,13 +109,19 @@ class _AddTaskState extends State<AddTask> {
         Text(
           'Title',
           style: AppTextStyles.subtitle(
+            context,
             fontWeight: FontWeight.w500,
-            color: AppColors.black,
           ),
         ),
         const Gap(5),
         TextFormField(
           controller: titleController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter a title';
+            }
+            return null;
+          },
           decoration: const InputDecoration(hintText: 'Enter title'),
         ),
       ],
@@ -96,13 +135,19 @@ class _AddTaskState extends State<AddTask> {
         Text(
           'Description',
           style: AppTextStyles.subtitle(
+            context,
             fontWeight: FontWeight.w500,
-            color: AppColors.black,
           ),
         ),
         const Gap(5),
         TextFormField(
           controller: descriptionController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter a description';
+            }
+            return null;
+          },
           maxLines: 3,
           decoration: const InputDecoration(hintText: 'Enter description'),
         ),
@@ -117,8 +162,8 @@ class _AddTaskState extends State<AddTask> {
         Text(
           'Date',
           style: AppTextStyles.subtitle(
+            context,
             fontWeight: FontWeight.w500,
-            color: AppColors.black,
           ),
         ),
         const Gap(5),
@@ -157,8 +202,8 @@ class _AddTaskState extends State<AddTask> {
           Text(
             'Start Time',
             style: AppTextStyles.subtitle(
+              context,
               fontWeight: FontWeight.w500,
-              color: AppColors.black,
             ),
           ),
           const Gap(5),
@@ -192,8 +237,8 @@ class _AddTaskState extends State<AddTask> {
           Text(
             'End Time',
             style: AppTextStyles.subtitle(
+              context,
               fontWeight: FontWeight.w500,
-              color: AppColors.black,
             ),
           ),
           const Gap(5),
@@ -226,8 +271,8 @@ class _AddTaskState extends State<AddTask> {
         Text(
           'Color',
           style: AppTextStyles.subtitle(
+            context,
             fontWeight: FontWeight.w500,
-            color: AppColors.black,
           ),
         ),
         const Gap(5),
@@ -246,8 +291,8 @@ class _AddTaskState extends State<AddTask> {
                       index == 0
                           ? AppColors.primaryColor
                           : index == 1
-                          ? AppColors.orangeColor
-                          : AppColors.redColor,
+                          ? AppColors.redColor
+                          : AppColors.orangeColor,
                   child:
                       index == selectedColor
                           ? const Icon(Icons.check, color: AppColors.white)

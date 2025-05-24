@@ -7,7 +7,13 @@ class MainButton extends StatelessWidget {
   final Function() onPressed;
   final double? width;
   final double? height;
-  const MainButton({super.key, required this.title, required this.onPressed, this.width, this.height});
+  const MainButton({
+    super.key,
+    required this.title,
+    required this.onPressed,
+    this.width,
+    this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,7 @@ class MainButton extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: AppTextStyles.subtitle(color: AppColors.white),
+          style: AppTextStyles.subtitle(context, color: AppColors.white),
         ),
       ),
     );

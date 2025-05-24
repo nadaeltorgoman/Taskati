@@ -4,14 +4,14 @@ import 'package:taskati/core/utils/text_styles.dart';
 
 enum DialogType { success, error, warning }
 
-showErrorSnackBar(
+showSnackBar(
   BuildContext context,
   String message, {
   DialogType type = DialogType.error,
 }) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text(message, style: AppTextStyles.body(color: AppColors.white)),
+      content: Text(message, style: AppTextStyles.body(context)),
       backgroundColor:
           type == DialogType.error
               ? AppColors.redColor

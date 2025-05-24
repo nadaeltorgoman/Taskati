@@ -1,20 +1,16 @@
 import 'package:hive_flutter/adapters.dart';
+import 'package:taskati/core/model/task_model.dart';
 
 class LocalStorage {
 
-  // Singleton pattern
-  // static final LocalStorage _instance = LocalStorage._internal();
-  // factory LocalStorage() {
-  //   return _instance;
-  // }
-  // LocalStorage._internal();
-
   static late Box _box;
+  static late Box<TaskModel> taskBox;
   static const String name = 'name';
   static const String imagePath = 'imagePath';
   // Initialize Hive
-  static init(){
-    _box = Hive.box('user');
+  static Future<void> init() async {
+    _box = await Hive.openBox('user');
+    taskBox = await Hive.openBox<TaskModel>('tasks');
   }
 
 
@@ -31,5 +27,15 @@ class LocalStorage {
   // Delete data from local storage
   static deleteData(String key) {
     _box.delete(key);
+  }
+
+  // Save task to local storage
+  static saveTask(String key, TaskModel task) {
+    taskBox.put(key, task);
+  }
+
+  // Get task from local storage
+  static TaskModel? getTask(String key) {
+    return taskBox.get(key);
   }
 }

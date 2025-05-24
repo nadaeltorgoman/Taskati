@@ -19,12 +19,9 @@ class HomeHeader extends StatelessWidget {
           children: [
             Text(
               'Hello, ${LocalStorage.getData(LocalStorage.name)}',
-              style: AppTextStyles.title(color: AppColors.primaryColor),
+              style: AppTextStyles.title(context, color: AppColors.primaryColor),
             ),
-            Text(
-              'Have a great day!',
-              style: AppTextStyles.subtitle(color: AppColors.black),
-            ),
+            Text('Have a great day!', style: AppTextStyles.subtitle(context)),
           ],
         ),
         CircleAvatar(

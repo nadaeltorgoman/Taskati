@@ -1,6 +1,7 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:taskati/core/utils/app_colors.dart';
 import 'package:taskati/features/Home/widgets/home_header.dart';
 import 'package:taskati/features/Home/widgets/list_of_tasks.dart';
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late String selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,31 +32,40 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(builder: (context) => EditProfile()),
                   );
                   if (result == true) {
-                    setState((){});
+                    setState(() {});
                   }
                 },
                 child: HomeHeader(),
               ),
               // Gap(15),
               SizedBox(height: 15),
-              TodayHeader(),
+              TodayHeader(selectedDate: selectedDate),
               // Gap(15)
               SizedBox(height: 15),
               DatePicker(
                 height: 100,
-                width: 70,
+                width: 60,
                 DateTime.now(),
                 initialSelectedDate: DateTime.now(),
+                monthTextStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                dayTextStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                dateTextStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
                 selectionColor: AppColors.primaryColor,
                 selectedTextColor: AppColors.white,
-                deactivatedColor: AppColors.black,
                 onDateChange: (date) {
-                  // Handle date change
+                  setState(() {
+                    selectedDate = DateFormat('yyyy-MM-dd').format(date);
+                  });
                 },
               ),
               Gap(20),
-              // SizedBox(height: 20),
-              ListOfTasks(),
+              ListOfTasks(selectedDate: selectedDate),
             ],
           ),
         ),
