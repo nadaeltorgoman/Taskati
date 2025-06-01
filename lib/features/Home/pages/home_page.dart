@@ -37,10 +37,8 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: HomeHeader(),
               ),
-              // Gap(15),
               SizedBox(height: 15),
               TodayHeader(selectedDate: selectedDate),
-              // Gap(15)
               SizedBox(height: 15),
               DatePicker(
                 height: 100,

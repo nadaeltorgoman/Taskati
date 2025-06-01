@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:taskati/core/functions/navigator.dart';
-import 'package:taskati/core/utils/app_colors.dart';
 import 'package:taskati/core/utils/text_styles.dart';
 import 'package:taskati/core/widgets/main_button.dart';
-import 'package:taskati/features/addTask/pages/add_task.dart';
+import 'package:taskati/features/tasks/pages/add_task.dart';
 
 class TodayHeader extends StatelessWidget {
   final String selectedDate;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+
 import 'package:taskati/core/functions/navigator.dart';
 import 'package:taskati/core/model/task_model.dart';
 import 'package:taskati/core/services/local_storage.dart';
@@ -9,31 +10,85 @@ import 'package:taskati/core/utils/text_styles.dart';
 import 'package:taskati/core/widgets/main_button.dart';
 import 'package:taskati/features/Home/pages/home_page.dart';
 
-class AddTask extends StatefulWidget {
+class BodyTask extends StatefulWidget {
   final String selectedDate;
-  const AddTask({super.key, required this.selectedDate});
+  final String? taskId;
+  final String? title;
+  final String? description;
+  final String? date;
+  final String? startDate;
+  final String? endDate;
+  final bool? isCompleted;
+  final int? color;
+  final bool addTask;
+  const BodyTask({
+    super.key,
+    required this.selectedDate,
+    this.taskId,
+    this.title,
+    this.description,
+    this.date,
+    this.startDate,
+    this.endDate,
+    this.isCompleted,
+    this.color,
+    this.addTask = true,
+  });
 
   @override
-  State<AddTask> createState() => _AddTaskState();
+  State<BodyTask> createState() => _BodyTaskState();
 }
 
-class _AddTaskState extends State<AddTask> {
+class _BodyTaskState extends State<BodyTask> {
   var titleController = TextEditingController();
   var descriptionController = TextEditingController();
   var dateController = TextEditingController();
   var startTimeController = TextEditingController();
   var endTimeController = TextEditingController();
-  int selectedColor = 0;
+  late int selectedColor;
   var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    dateController.text = widget.selectedDate;
-    startTimeController.text = DateFormat('hh:mm a').format(DateTime.now());
-    endTimeController.text = DateFormat(
-      'hh:mm a',
-    ).format(DateFormat('hh:mm a').parse(startTimeController.text).add(const Duration(hours: 1)));
     super.initState();
+
+    titleController = TextEditingController(
+      text: widget.addTask ? '' : widget.title,
+    );
+    descriptionController = TextEditingController(
+      text: widget.addTask ? '' : widget.description,
+    );
+    dateController = TextEditingController(text: widget.selectedDate);
+
+    startTimeController = TextEditingController(
+      text:
+          widget.addTask
+              ? DateFormat('hh:mm a').format(DateTime.now())
+              : widget.startDate!,
+    );
+
+    endTimeController = TextEditingController(
+      text:
+          widget.addTask
+              ? DateFormat('hh:mm a').format(
+                DateFormat('hh:mm a')
+                    .parse(DateFormat('hh:mm a').format(DateTime.now()))
+                    .add(const Duration(hours: 1)),
+              )
+              : widget.endDate!,
+    );
+
+    selectedColor = widget.addTask ? 0 : widget.color!;
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    dateController.dispose();
+    startTimeController.dispose();
+    endTimeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,7 +101,7 @@ class _AddTaskState extends State<AddTask> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Add Task'),
+        title: Text(widget.addTask ? 'Add Task' : 'Edit Task'),
         centerTitle: true,
       ),
       body: Padding(
@@ -54,7 +109,6 @@ class _AddTaskState extends State<AddTask> {
         child: SingleChildScrollView(
           child: Form(
             key: formKey,
-            // autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -75,24 +129,40 @@ class _AddTaskState extends State<AddTask> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: MainButton(
-          title: 'Create Task',
+          title: widget.addTask ? 'Add Task' : 'Update Task',
           onPressed: () {
             if (formKey.currentState?.validate() == true) {
               String taskId =
-                  titleController.text + DateTime.now().microsecond.toString();
-              LocalStorage.saveTask(
-                taskId,
-                TaskModel(
-                  id: taskId,
-                  title: titleController.text,
-                  description: descriptionController.text,
-                  date: dateController.text,
-                  startDate: startTimeController.text,
-                  endDate: endTimeController.text,
-                  isCompleted: false,
-                  color: selectedColor,
-                ),
-              );
+                  widget.addTask
+                      ? DateTime.now().millisecondsSinceEpoch.toString()
+                      : widget.taskId!;
+              widget.addTask
+                  ? LocalStorage.saveTask(
+                    taskId,
+                    TaskModel(
+                      id: taskId,
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      date: dateController.text,
+                      startDate: startTimeController.text,
+                      endDate: endTimeController.text,
+                      isCompleted: false,
+                      color: selectedColor,
+                    ),
+                  )
+                  : LocalStorage.updateTask(
+                    taskId,
+                    TaskModel(
+                      id: taskId,
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      date: dateController.text,
+                      startDate: startTimeController.text,
+                      endDate: endTimeController.text,
+                      isCompleted: false,
+                      color: selectedColor,
+                    ),
+                  );
               context.pushReplacement(const HomePage());
             }
           },
@@ -108,10 +178,7 @@ class _AddTaskState extends State<AddTask> {
       children: [
         Text(
           'Title',
-          style: AppTextStyles.subtitle(
-            context,
-            fontWeight: FontWeight.w500,
-          ),
+          style: AppTextStyles.subtitle(context, fontWeight: FontWeight.w500),
         ),
         const Gap(5),
         TextFormField(
@@ -122,7 +189,7 @@ class _AddTaskState extends State<AddTask> {
             }
             return null;
           },
-          decoration: const InputDecoration(hintText: 'Enter title'),
+          decoration: InputDecoration(hintText: 'Enter title'),
         ),
       ],
     );
@@ -134,10 +201,7 @@ class _AddTaskState extends State<AddTask> {
       children: [
         Text(
           'Description',
-          style: AppTextStyles.subtitle(
-            context,
-            fontWeight: FontWeight.w500,
-          ),
+          style: AppTextStyles.subtitle(context, fontWeight: FontWeight.w500),
         ),
         const Gap(5),
         TextFormField(
@@ -149,7 +213,7 @@ class _AddTaskState extends State<AddTask> {
             return null;
           },
           maxLines: 3,
-          decoration: const InputDecoration(hintText: 'Enter description'),
+          decoration: InputDecoration(hintText: 'Enter description'),
         ),
       ],
     );
@@ -161,10 +225,7 @@ class _AddTaskState extends State<AddTask> {
       children: [
         Text(
           'Date',
-          style: AppTextStyles.subtitle(
-            context,
-            fontWeight: FontWeight.w500,
-          ),
+          style: AppTextStyles.subtitle(context, fontWeight: FontWeight.w500),
         ),
         const Gap(5),
         TextFormField(
@@ -184,7 +245,10 @@ class _AddTaskState extends State<AddTask> {
   Future<void> selectTaskDate() async {
     var pickedDate = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate:
+          widget.addTask
+              ? DateTime.now()
+              : DateFormat("yyyy-MM-dd").parse(widget.date!),
       firstDate: DateTime.now(),
       lastDate: DateTime(2050),
     );
@@ -201,10 +265,7 @@ class _AddTaskState extends State<AddTask> {
         children: [
           Text(
             'Start Time',
-            style: AppTextStyles.subtitle(
-              context,
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppTextStyles.subtitle(context, fontWeight: FontWeight.w500),
           ),
           const Gap(5),
           TextFormField(
@@ -212,7 +273,12 @@ class _AddTaskState extends State<AddTask> {
             onTap: () async {
               var pickedTime = await showTimePicker(
                 context: context,
-                initialTime: TimeOfDay.now(),
+                initialTime:
+                    widget.addTask
+                        ? TimeOfDay.now()
+                        : TimeOfDay.fromDateTime(
+                          DateFormat("HH:mm").parse(widget.startDate!),
+                        ),
               );
 
               if (pickedTime != null) {
@@ -236,10 +302,7 @@ class _AddTaskState extends State<AddTask> {
         children: [
           Text(
             'End Time',
-            style: AppTextStyles.subtitle(
-              context,
-              fontWeight: FontWeight.w500,
-            ),
+            style: AppTextStyles.subtitle(context, fontWeight: FontWeight.w500),
           ),
           const Gap(5),
           TextFormField(
@@ -247,7 +310,12 @@ class _AddTaskState extends State<AddTask> {
             onTap: () async {
               var pickedTime = await showTimePicker(
                 context: context,
-                initialTime: TimeOfDay.now(),
+                initialTime:
+                    widget.addTask
+                        ? TimeOfDay.now()
+                        : TimeOfDay.fromDateTime(
+                          DateFormat("HH:mm").parse(widget.endDate!),
+                        ),
               );
 
               if (pickedTime != null) {
@@ -270,10 +338,7 @@ class _AddTaskState extends State<AddTask> {
       children: [
         Text(
           'Color',
-          style: AppTextStyles.subtitle(
-            context,
-            fontWeight: FontWeight.w500,
-          ),
+          style: AppTextStyles.subtitle(context, fontWeight: FontWeight.w500),
         ),
         const Gap(5),
         Row(

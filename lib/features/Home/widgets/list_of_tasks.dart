@@ -8,11 +8,17 @@ import 'package:taskati/core/utils/app_colors.dart';
 import 'package:taskati/core/utils/text_styles.dart';
 import 'package:taskati/core/widgets/dialog.dart';
 import 'package:taskati/features/Home/widgets/task_card.dart';
+import 'package:taskati/features/tasks/pages/update_task.dart';
 
-class ListOfTasks extends StatelessWidget {
+class ListOfTasks extends StatefulWidget {
   final String selectedDate;
   const ListOfTasks({super.key, required this.selectedDate});
 
+  @override
+  State<ListOfTasks> createState() => _ListOfTasksState();
+}
+
+class _ListOfTasksState extends State<ListOfTasks> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -21,7 +27,7 @@ class ListOfTasks extends StatelessWidget {
         builder: (context, box, child) {
           List<TaskModel> tasks = [];
           for (var task in box.values) {
-            if (selectedDate == task.date) {
+            if (widget.selectedDate == task.date) {
               tasks.add(task);
             }
           }
@@ -41,11 +47,9 @@ class ListOfTasks extends StatelessWidget {
                         : completeTask(context),
                 secondaryBackground: deleteTask(context),
                 onDismissed: (direction) {
-                  // Immediately remove from local list to prevent the error
                   final dismissedTask = tasks[index];
 
                   if (direction == DismissDirection.startToEnd) {
-                    // Mark as done or uncompleted
                     if (dismissedTask.isCompleted) {
                       box.put(
                         dismissedTask.id,
@@ -77,7 +81,21 @@ class ListOfTasks extends StatelessWidget {
                     );
                   }
                 },
-                child: TaskCard(task: tasks[index]),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => UpdateTask(
+                              taskId: tasks[index].id,
+                              selectedDate: widget.selectedDate,
+                            ),
+                      ),
+                    );
+                  },
+                  child: TaskCard(task: tasks[index]),
+                ),
               );
             },
           );
@@ -97,7 +115,10 @@ class ListOfTasks extends StatelessWidget {
         children: [
           Icon(Icons.delete),
           Gap(10),
-          Text('Delete', style: AppTextStyles.subtitle(context)),
+          Text(
+            'Delete',
+            style: AppTextStyles.subtitle(context, color: AppColors.white),
+          ),
         ],
       ),
     );
@@ -114,7 +135,10 @@ class ListOfTasks extends StatelessWidget {
         children: [
           Icon(Icons.check),
           Gap(10),
-          Text('Mark as done', style: AppTextStyles.subtitle(context)),
+          Text(
+            'Mark as done',
+            style: AppTextStyles.subtitle(context, color: AppColors.white),
+          ),
         ],
       ),
     );
@@ -131,7 +155,10 @@ class ListOfTasks extends StatelessWidget {
         children: [
           Icon(Icons.close),
           Gap(10),
-          Text('Mark as uncompleted', style: AppTextStyles.subtitle(context)),
+          Text(
+            'Mark as uncompleted',
+            style: AppTextStyles.subtitle(context, color: AppColors.white),
+          ),
         ],
       ),
     );

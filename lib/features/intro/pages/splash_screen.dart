@@ -4,7 +4,6 @@ import 'package:lottie/lottie.dart';
 import 'package:taskati/core/constants/app_images.dart';
 import 'package:taskati/core/functions/navigator.dart';
 import 'package:taskati/core/services/local_storage.dart';
-import 'package:taskati/core/utils/app_colors.dart';
 import 'package:taskati/core/utils/text_styles.dart';
 import 'package:taskati/features/Home/pages/home_page.dart';
 import 'package:taskati/features/intro/pages/upload_screen.dart';

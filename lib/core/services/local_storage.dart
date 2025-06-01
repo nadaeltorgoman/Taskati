@@ -9,9 +9,24 @@ class LocalStorage {
   static const String imagePath = 'imagePath';
   // Initialize Hive
   static Future<void> init() async {
-    _box = await Hive.openBox('user');
-    taskBox = await Hive.openBox<TaskModel>('tasks');
+  try {
+    // Check if boxes are already open
+    if (Hive.isBoxOpen('user')) {
+      _box = Hive.box('user');
+    } else {
+      _box = await Hive.openBox('user');
+    }
+    
+    if (Hive.isBoxOpen('tasks')) {
+      taskBox = Hive.box<TaskModel>('tasks');
+    } else {
+      taskBox = await Hive.openBox<TaskModel>('tasks');
+    }
+  } catch (e) {
+    print('Error in local storage init: $e');
+    rethrow;
   }
+}
 
 
   // Save data to local storage
@@ -31,6 +46,11 @@ class LocalStorage {
 
   // Save task to local storage
   static saveTask(String key, TaskModel task) {
+    taskBox.put(key, task);
+  }
+
+  // update task in local storage
+  static updateTask(String key, TaskModel task) {
     taskBox.put(key, task);
   }
 

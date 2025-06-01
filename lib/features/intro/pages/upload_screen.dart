@@ -153,7 +153,6 @@ class _UploadScreenState extends State<UploadScreen> {
     ImagePicker imagePicker = ImagePicker();
     imagePicker.pickImage(source: ImageSource.camera).then((value) {
       if (value != null) {
-        // Handle the selected image
         setState(() {
           pathImage = value.path;
           context.pop();
@@ -166,7 +165,6 @@ class _UploadScreenState extends State<UploadScreen> {
     ImagePicker imagePicker = ImagePicker();
     await imagePicker.pickImage(source: ImageSource.gallery).then((value) {
       if (value != null) {
-        // Handle the selected image
         setState(() {
           pathImage = value.path;
         });
