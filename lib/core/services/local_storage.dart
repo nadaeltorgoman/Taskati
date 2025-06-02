@@ -3,18 +3,19 @@ import 'package:taskati/core/model/task_model.dart';
 
 class LocalStorage {
 
-  static late Box _box;
+  static late Box box;
   static late Box<TaskModel> taskBox;
   static const String name = 'name';
   static const String imagePath = 'imagePath';
+  static const String isDarkMode = 'isDarkMode';
   // Initialize Hive
   static Future<void> init() async {
   try {
     // Check if boxes are already open
     if (Hive.isBoxOpen('user')) {
-      _box = Hive.box('user');
+      box = Hive.box('user');
     } else {
-      _box = await Hive.openBox('user');
+      box = await Hive.openBox('user');
     }
     
     if (Hive.isBoxOpen('tasks')) {
@@ -30,18 +31,18 @@ class LocalStorage {
 
 
   // Save data to local storage
-  static saveData(String key, String value) {
-    _box.put(key, value);
+  static saveData(String key, value) {
+    box.put(key, value);
   }
 
   // Get data from local storage
   static getData(String key) {
-    return _box.get(key);
+    return box.get(key);
   }
 
   // Delete data from local storage
   static deleteData(String key) {
-    _box.delete(key);
+    box.delete(key);
   }
 
   // Save task to local storage

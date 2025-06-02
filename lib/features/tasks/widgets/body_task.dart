@@ -96,7 +96,10 @@ class _BodyTaskState extends State<BodyTask> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primaryColor),
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppBarTheme.of(context).iconTheme?.color,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },

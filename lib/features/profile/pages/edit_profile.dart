@@ -25,7 +25,7 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () {
             if (pathImage != null) {
               LocalStorage.saveData(LocalStorage.imagePath, pathImage!);
@@ -35,10 +35,17 @@ class _EditProfileState extends State<EditProfile> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.light_mode),
+            icon: Icon(
+              LocalStorage.getData(LocalStorage.isDarkMode) == true
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+              color: Theme.of(context).iconTheme.color,
+            ),
             onPressed: () {
               // Handle the theme change
-
+              bool value =
+                  LocalStorage.getData(LocalStorage.isDarkMode) ?? false;
+              LocalStorage.saveData(LocalStorage.isDarkMode, !value);
             },
           ),
         ],

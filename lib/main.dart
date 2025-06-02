@@ -6,7 +6,7 @@ import 'package:taskati/core/utils/themes.dart';
 import 'package:taskati/features/intro/pages/splash_screen.dart';
 
 Future<void> main() async {
-   // Ensure that plugin services are initialized
+  // Ensure that plugin services are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Hive
@@ -16,25 +16,25 @@ Future<void> main() async {
   if (!Hive.isAdapterRegistered(1)) {
     Hive.registerAdapter(TaskModelAdapter());
   }
-  
+
   try {
     await LocalStorage.init();
   } catch (e) {
     print('Error initializing storage: $e');
-    
+
     // Close boxes first if they're open
     try {
       if (Hive.isBoxOpen('user')) {
         await Hive.box('user').close();
       }
-      
+
       if (Hive.isBoxOpen('tasks')) {
         await Hive.box<TaskModel>('tasks').close();
       }
     } catch (closeErr) {
       print('Error closing boxes: $closeErr');
     }
-    
+
     // delete the boxes
     try {
       await Hive.deleteBoxFromDisk('tasks');
@@ -42,7 +42,7 @@ Future<void> main() async {
     } catch (deleteErr) {
       print('Error deleting boxes: $deleteErr');
     }
-    
+
     await LocalStorage.init();
   }
 
@@ -55,13 +55,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Taskati',
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.system,
-      theme: AppThemes.lightTheme,
-      darkTheme: AppThemes.darkTheme,
-      home: const SplashScreen(),
+    return ValueListenableBuilder(
+      valueListenable: LocalStorage.box.listenable(),
+      builder: (context, box, child) {
+        bool isDarkMode = LocalStorage.getData(LocalStorage.isDarkMode) ?? false;
+        return MaterialApp(
+          title: 'Taskati',
+          debugShowCheckedModeBanner: false,
+          themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          theme: AppThemes.lightTheme,
+          darkTheme: AppThemes.darkTheme,
+          home: const SplashScreen(),
+        );
+      },
     );
   }
 }
